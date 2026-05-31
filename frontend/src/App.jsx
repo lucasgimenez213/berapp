@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import Estoque from './pages/Estoque'
 import NovoItem from './pages/NovoItem'
 import Movimentacao from './pages/Movimentacao'
 import Historico from './pages/Historico'
+import Login from './pages/Login'
 
 const links = [
   { to: '/', label: 'Estoque', icon: '📦', end: true },
@@ -12,6 +14,15 @@ const links = [
 ]
 
 export default function App() {
+  const [authed, setAuthed] = useState(!!localStorage.getItem('token'))
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    setAuthed(false)
+  }
+
+  if (!authed) return <Login onLogin={() => setAuthed(true)} />
+
   return (
     <BrowserRouter>
       <div className="layout">
@@ -24,6 +35,7 @@ export default function App() {
               </NavLink>
             ))}
           </nav>
+          <button className="logout-btn" onClick={handleLogout}>Sair</button>
         </aside>
 
         <main className="main-content">
