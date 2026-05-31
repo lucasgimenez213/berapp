@@ -187,3 +187,57 @@ td { padding: 14px 16px; border-top: 1px solid var(--border); font-size: 0.9rem;
 .badge-saida { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
 
 .loading, .empty { text-align: center; color: var(--muted); padding: 48px; font-size: 0.95rem; }
+
+/* Bottom nav (mobile only) */
+.bottom-nav { display: none; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px 90px;
+  }
+
+  h1 { font-size: 1.3rem; }
+
+  .summary-row { gap: 10px; }
+  .summary-card { padding: 12px 16px; }
+  .summary-card .count { font-size: 1.6rem; }
+
+  .itens-grid { grid-template-columns: 1fr; }
+
+  .form-card { max-width: 100%; }
+  .form-row { grid-template-columns: 1fr; }
+
+  .table-wrapper { overflow-x: auto; }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--sidebar);
+    padding: 8px 0 12px;
+    z-index: 100;
+    justify-content: space-around;
+  }
+
+  .bottom-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: color 0.15s;
+  }
+
+  .bottom-link span:first-child { font-size: 1.3rem; }
+  .bottom-link.active { color: white; }
+}

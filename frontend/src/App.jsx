@@ -4,6 +4,13 @@ import NovoItem from './pages/NovoItem'
 import Movimentacao from './pages/Movimentacao'
 import Historico from './pages/Historico'
 
+const links = [
+  { to: '/', label: 'Estoque', icon: '📦', end: true },
+  { to: '/novo', label: 'Novo Item', icon: '➕' },
+  { to: '/movimentacao', label: 'Movimentação', icon: '↕️' },
+  { to: '/historico', label: 'Histórico', icon: '📋' },
+]
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -11,20 +18,14 @@ export default function App() {
         <aside className="sidebar">
           <div className="sidebar-logo">Berapp</div>
           <nav className="sidebar-nav">
-            <NavLink to="/" end className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
-              Estoque
-            </NavLink>
-            <NavLink to="/novo" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
-              Novo Item
-            </NavLink>
-            <NavLink to="/movimentacao" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
-              Movimentação
-            </NavLink>
-            <NavLink to="/historico" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
-              Histórico
-            </NavLink>
+            {links.map(l => (
+              <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
+                <span className="nav-icon">{l.icon}</span> {l.label}
+              </NavLink>
+            ))}
           </nav>
         </aside>
+
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Estoque />} />
@@ -33,6 +34,15 @@ export default function App() {
             <Route path="/historico" element={<Historico />} />
           </Routes>
         </main>
+
+        <nav className="bottom-nav">
+          {links.map(l => (
+            <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => 'bottom-link' + (isActive ? ' active' : '')}>
+              <span>{l.icon}</span>
+              <span>{l.label}</span>
+            </NavLink>
+          ))}
+        </nav>
       </div>
     </BrowserRouter>
   )
