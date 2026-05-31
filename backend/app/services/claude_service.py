@@ -1,7 +1,11 @@
 import anthropic
 import json
+import logging
 import os
+import re
 from app.database import itens_collection
+
+logger = logging.getLogger(__name__)
 
 
 async def processar_mensagem(mensagem: str) -> dict:
@@ -15,7 +19,7 @@ async def processar_mensagem(mensagem: str) -> dict:
 
     response = await client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=256,
+        max_tokens=512,
         system=f"""Você é um assistente de controle de estoque de insumos médicos para home care do Bernardo.
 O usuário manda mensagens em português descrevendo movimentações ou consultas de estoque.
 
@@ -35,4 +39,17 @@ Se o item não existir na lista, defina acao como "invalido" e explique na respo
         messages=[{"role": "user", "content": mensagem}]
     )
 
-    return json.loads(response.content[0].text.strip())
+    logger.info(f"Claude response type: {type(response.content)}")
+    logger.info(f"Claude content length: {len(response.content)}")
+
+    if not response.content:
+        raise ValueError("Claude retornou resposta vazia")
+
+    raw = response.content[0].text.strip()
+    logger.info(f"Claude raw text: '{raw}'")
+
+    match = re.search(r'\{.*\}', raw, re.DOTALL)
+    if match:
+        return json.loads(match.group())
+
+    return json.loads(raw)
