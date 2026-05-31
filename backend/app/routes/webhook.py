@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Request
 from bson import ObjectId
 from datetime import datetime, timezone
@@ -5,6 +6,7 @@ from app.services.claude_service import processar_mensagem
 from app.services.telegram import enviar_mensagem
 from app.database import itens_collection, movimentacoes_collection
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -48,7 +50,8 @@ async def telegram_webhook(request: Request):
 
         await enviar_mensagem(resultado.get("resposta", "✅ Feito!"))
 
-    except Exception:
+    except Exception as e:
+        logger.error(f"Erro no webhook: {e}", exc_info=True)
         await enviar_mensagem("❌ Não entendi. Tente: 'entrada de 10 seringas' ou 'saiu 1 midazolam'")
 
     return {"ok": True}

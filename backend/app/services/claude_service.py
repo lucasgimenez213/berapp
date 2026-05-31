@@ -11,9 +11,9 @@ async def processar_mensagem(mensagem: str) -> dict:
         for item in itens
     ]) or "Nenhum item cadastrado ainda."
 
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    response = client.messages.create(
+    response = await client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=256,
         system=f"""Você é um assistente de controle de estoque de insumos médicos para home care do Bernardo.
