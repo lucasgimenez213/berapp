@@ -38,6 +38,9 @@ app.add_middleware(
 
 @app.middleware("http")
 async def verify_token(request: Request, call_next):
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
     path = request.url.path
     if path in PUBLIC_PATHS or path.startswith("/docs") or path.startswith("/openapi"):
         return await call_next(request)
