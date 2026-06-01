@@ -23,8 +23,12 @@ export default function Login({ onLogin }) {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h2 className="login-title">Berapp</h2>
-        <p className="login-sub">Controle de Estoque do Bernardo</p>
+        <div className="login-logo">
+          <div className="logo-mark">B</div>
+          <span className="login-title">Berapp</span>
+        </div>
+        <p className="login-sub">Controle de estoque do Bernardo</p>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Usuário</label>
@@ -32,6 +36,7 @@ export default function Login({ onLogin }) {
               name="username"
               value={form.username}
               onChange={e => setForm({ ...form, username: e.target.value })}
+              placeholder="seu usuário"
               required
               autoComplete="username"
             />
@@ -43,12 +48,20 @@ export default function Login({ onLogin }) {
               type="password"
               value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })}
+              placeholder="••••••••"
               required
               autoComplete="current-password"
             />
           </div>
+
           {error && <div className="error-msg">{error}</div>}
-          <button className="btn btn-primary" style={{ width: '100%', marginTop: 8 }} type="submit" disabled={loading}>
+
+          <button
+            className="btn btn-primary"
+            style={{ width: '100%', marginTop: 20, padding: '11px' }}
+            type="submit"
+            disabled={loading}
+          >
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>

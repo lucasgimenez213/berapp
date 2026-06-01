@@ -59,7 +59,11 @@ export default function Estoque() {
 
   return (
     <div>
-      <h1>Estoque</h1>
+      <div className="page-header">
+        <h1>Estoque</h1>
+        <p>Insumos do Bernardo — home care</p>
+      </div>
+      <div className="page-body">
 
       {counts.critico > 0 && (
         <div className="alert-banner">
@@ -150,6 +154,8 @@ export default function Estoque() {
           </div>
         </div>
       )}
+
+      </div>
 
       {/* Modal de confirmação de exclusão */}
       {deleteItem && (

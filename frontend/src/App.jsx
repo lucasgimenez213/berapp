@@ -7,10 +7,10 @@ import Historico from './pages/Historico'
 import Login from './pages/Login'
 
 const links = [
-  { to: '/', label: 'Estoque', icon: '📦', end: true },
-  { to: '/novo', label: 'Novo Item', icon: '➕' },
-  { to: '/movimentacao', label: 'Movimentação', icon: '↕️' },
-  { to: '/historico', label: 'Histórico', icon: '📋' },
+  { to: '/', label: 'Estoque',      icon: '◈', end: true },
+  { to: '/novo', label: 'Novo Item', icon: '＋' },
+  { to: '/movimentacao', label: 'Movimentação', icon: '⇅' },
+  { to: '/historico', label: 'Histórico', icon: '≡' },
 ]
 
 export default function App() {
@@ -27,15 +27,24 @@ export default function App() {
     <BrowserRouter>
       <div className="layout">
         <aside className="sidebar">
-          <div className="sidebar-logo">Berapp</div>
+          <div className="sidebar-logo">
+            <div className="logo-mark">B</div>
+            <span className="logo-text">Berapp</span>
+          </div>
           <nav className="sidebar-nav">
             {links.map(l => (
-              <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
-                <span className="nav-icon">{l.icon}</span> {l.label}
+              <NavLink key={l.to} to={l.to} end={l.end}
+                className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
+                <span className="nav-icon">{l.icon}</span>
+                {l.label}
               </NavLink>
             ))}
           </nav>
-          <button className="logout-btn" onClick={handleLogout}>Sair</button>
+          <div className="sidebar-footer">
+            <button className="logout-btn" onClick={handleLogout}>
+              <span>↩</span> Sair
+            </button>
+          </div>
         </aside>
 
         <main className="main-content">
@@ -49,7 +58,8 @@ export default function App() {
 
         <nav className="bottom-nav">
           {links.map(l => (
-            <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => 'bottom-link' + (isActive ? ' active' : '')}>
+            <NavLink key={l.to} to={l.to} end={l.end}
+              className={({ isActive }) => 'bottom-link' + (isActive ? ' active' : '')}>
               <span>{l.icon}</span>
               <span>{l.label}</span>
             </NavLink>
