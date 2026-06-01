@@ -94,7 +94,7 @@ export default function Estoque() {
                   {item.quantidade} <span>{item.unidade}</span>
                 </div>
                 <div className="item-footer">
-                  <span className="tag">{item.categoria}</span>
+                  <span className={`tag tag-${item.categoria}`}>{item.categoria}</span>
                   <span className="tag">Mín: {item.quantidade_minima}</span>
                   {item.validade && <span className="tag">Val: {item.validade}</span>}
                 </div>
