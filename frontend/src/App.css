@@ -37,6 +37,31 @@ body {
   font-feature-settings: "ss01","cv01","cv11";
 }
 
+.main-content::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 60% -10%, rgba(124,106,247,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 100% 80%, rgba(62,207,142,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 0% 60%, rgba(124,106,247,0.04) 0%, transparent 60%);
+}
+
+.main-content::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 100% 100% at 60% 40%, black 20%, transparent 80%);
+}
+
+.page-header, .page-body { position: relative; z-index: 1; }
+
 /* ═══════════════════════════════
    LAYOUT
 ══════════════════════════════ */
