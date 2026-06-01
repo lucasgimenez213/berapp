@@ -8,17 +8,47 @@ function getStatus(item) {
 }
 
 const statusLabel = { ok: 'OK', atencao: 'Atenção', critico: 'Crítico' }
+const CATEGORIAS = ['medicamento', 'material', 'equipamento', 'outro']
+const UNIDADES = ['unidade', 'caixa', 'frasco', 'ampola', 'ml', 'mg', 'comprimido', 'sachê']
 
 export default function Estoque() {
   const [itens, setItens] = useState([])
   const [loading, setLoading] = useState(true)
+  const [editItem, setEditItem] = useState(null)
+  const [deleteItem, setDeleteItem] = useState(null)
+  const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
-    api.get('/itens/').then(r => {
-      setItens(r.data)
-      setLoading(false)
-    }).catch(() => setLoading(false))
-  }, [])
+  const load = () => {
+    api.get('/itens/').then(r => { setItens(r.data); setLoading(false) })
+      .catch(() => setLoading(false))
+  }
+
+  useEffect(() => { load() }, [])
+
+  const handleEdit = async e => {
+    e.preventDefault()
+    setSaving(true)
+    const id = editItem._id || editItem.id
+    await api.put(`/itens/${id}`, {
+      nome: editItem.nome,
+      categoria: editItem.categoria,
+      quantidade: Number(editItem.quantidade),
+      unidade: editItem.unidade,
+      quantidade_minima: Number(editItem.quantidade_minima),
+      validade: editItem.validade || null,
+      observacoes: editItem.observacoes
+    })
+    setSaving(false)
+    setEditItem(null)
+    load()
+  }
+
+  const handleDelete = async () => {
+    const id = deleteItem._id || deleteItem.id
+    await api.delete(`/itens/${id}`)
+    setDeleteItem(null)
+    load()
+  }
 
   if (loading) return <div className="loading">Carregando...</div>
 
@@ -38,18 +68,9 @@ export default function Estoque() {
       )}
 
       <div className="summary-row">
-        <div className="summary-card ok">
-          <span className="count">{counts.ok}</span>
-          <span className="label">OK</span>
-        </div>
-        <div className="summary-card atencao">
-          <span className="count">{counts.atencao}</span>
-          <span className="label">Atenção</span>
-        </div>
-        <div className="summary-card critico">
-          <span className="count">{counts.critico}</span>
-          <span className="label">Crítico</span>
-        </div>
+        <div className="summary-card ok"><span className="count">{counts.ok}</span><span className="label">OK</span></div>
+        <div className="summary-card atencao"><span className="count">{counts.atencao}</span><span className="label">Atenção</span></div>
+        <div className="summary-card critico"><span className="count">{counts.critico}</span><span className="label">Crítico</span></div>
       </div>
 
       {itens.length === 0 ? (
@@ -73,9 +94,74 @@ export default function Estoque() {
                   <span className="tag">Mín: {item.quantidade_minima}</span>
                   {item.validade && <span className="tag">Val: {item.validade}</span>}
                 </div>
+                <div className="item-actions">
+                  <button className="action-btn edit" onClick={() => setEditItem({ ...item })}>Editar</button>
+                  <button className="action-btn delete" onClick={() => setDeleteItem(item)}>Excluir</button>
+                </div>
               </div>
             )
           })}
+        </div>
+      )}
+
+      {/* Modal de edição */}
+      {editItem && (
+        <div className="modal-overlay" onClick={() => setEditItem(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h2>Editar Item</h2>
+            <form onSubmit={handleEdit}>
+              <div className="form-group">
+                <label>Nome</label>
+                <input value={editItem.nome} onChange={e => setEditItem({ ...editItem, nome: e.target.value })} required />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Categoria</label>
+                  <select value={editItem.categoria} onChange={e => setEditItem({ ...editItem, categoria: e.target.value })}>
+                    {CATEGORIAS.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Unidade</label>
+                  <select value={editItem.unidade} onChange={e => setEditItem({ ...editItem, unidade: e.target.value })}>
+                    {UNIDADES.map(u => <option key={u}>{u}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Quantidade</label>
+                  <input type="number" min="0" value={editItem.quantidade} onChange={e => setEditItem({ ...editItem, quantidade: e.target.value })} required />
+                </div>
+                <div className="form-group">
+                  <label>Qtd Mínima</label>
+                  <input type="number" min="0" value={editItem.quantidade_minima} onChange={e => setEditItem({ ...editItem, quantidade_minima: e.target.value })} required />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Validade</label>
+                <input type="date" value={editItem.validade || ''} onChange={e => setEditItem({ ...editItem, validade: e.target.value })} />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn btn-ghost" onClick={() => setEditItem(null)}>Cancelar</button>
+                <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Salvando...' : 'Salvar'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmação de exclusão */}
+      {deleteItem && (
+        <div className="modal-overlay" onClick={() => setDeleteItem(null)}>
+          <div className="modal modal-sm" onClick={e => e.stopPropagation()}>
+            <h2>Excluir Item</h2>
+            <p className="modal-text">Tem certeza que quer excluir <strong>{deleteItem.nome}</strong>? Esta ação não pode ser desfeita.</p>
+            <div className="modal-actions">
+              <button className="btn btn-ghost" onClick={() => setDeleteItem(null)}>Cancelar</button>
+              <button className="btn btn-danger" onClick={handleDelete}>Excluir</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -257,6 +257,72 @@ tr:hover td { background: var(--card-hover); }
 .login-title { font-size: 1.6rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
 .login-sub { text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 32px; line-height: 1.5; }
 
+/* ── Item actions ── */
+.item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.action-btn {
+  flex: 1;
+  padding: 6px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.action-btn.edit { color: var(--primary); }
+.action-btn.edit:hover { background: rgba(129, 140, 248, 0.1); border-color: var(--primary); }
+.action-btn.delete { color: var(--critico); }
+.action-btn.delete:hover { background: var(--critico-bg); border-color: var(--critico); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.modal-sm { max-width: 360px; }
+
+.modal h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+
+.modal-text { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px; }
+.modal-text strong { color: var(--text); }
+
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.btn-ghost:hover { border-color: #52525b; color: var(--text); }
+
+.btn-danger { background: var(--critico); color: white; }
+.btn-danger:hover { background: #dc2626; }
+
 /* ── Loading / Empty ── */
 .loading, .empty { text-align: center; color: var(--muted); padding: 60px; font-size: 0.9rem; }
 
