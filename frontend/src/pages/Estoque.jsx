@@ -11,12 +11,16 @@ const statusLabel = { ok: 'OK', atencao: 'Atenção', critico: 'Crítico' }
 const CATEGORIAS = ['medicamento', 'material', 'equipamento', 'outro']
 const UNIDADES = ['unidade', 'caixa', 'frasco', 'ampola', 'ml', 'mg', 'comprimido', 'sachê']
 
+const STATUS_ORDER = { critico: 0, atencao: 1, ok: 2 }
+
 export default function Estoque() {
   const [itens, setItens] = useState([])
   const [loading, setLoading] = useState(true)
   const [editItem, setEditItem] = useState(null)
   const [deleteItem, setDeleteItem] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [search, setSearch] = useState('')
+  const [sortByStatus, setSortByStatus] = useState(false)
 
   const load = () => {
     api.get('/itens/').then(r => { setItens(r.data); setLoading(false) })
@@ -57,6 +61,10 @@ export default function Estoque() {
     { ok: 0, atencao: 0, critico: 0 }
   )
 
+  const itensFiltrados = itens
+    .filter(i => i.nome.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => sortByStatus ? STATUS_ORDER[getStatus(a)] - STATUS_ORDER[getStatus(b)] : 0)
+
   return (
     <div>
       <div className="page-header">
@@ -71,6 +79,28 @@ export default function Estoque() {
         </div>
       )}
 
+      <div className="search-filter-row">
+        <div className="search-box">
+          <span className="search-icon">⌕</span>
+          <input
+            type="text"
+            placeholder="Buscar item..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="search-input"
+          />
+          {search && (
+            <button className="search-clear" onClick={() => setSearch('')}>✕</button>
+          )}
+        </div>
+        <button
+          className={`filter-btn ${sortByStatus ? 'active' : ''}`}
+          onClick={() => setSortByStatus(v => !v)}
+        >
+          {sortByStatus ? '● ' : '○ '}Críticos primeiro
+        </button>
+      </div>
+
       <div className="summary-row">
         <div className="summary-card ok"><span className="count">{counts.ok}</span><span className="label">OK</span></div>
         <div className="summary-card atencao"><span className="count">{counts.atencao}</span><span className="label">Atenção</span></div>
@@ -79,9 +109,11 @@ export default function Estoque() {
 
       {itens.length === 0 ? (
         <div className="empty">Nenhum item cadastrado. Adicione o primeiro item!</div>
+      ) : itensFiltrados.length === 0 ? (
+        <div className="empty">Nenhum item encontrado para "{search}".</div>
       ) : (
         <div className="itens-grid">
-          {itens.map(item => {
+          {itensFiltrados.map(item => {
             const id = item._id || item.id
             const status = getStatus(item)
             return (
