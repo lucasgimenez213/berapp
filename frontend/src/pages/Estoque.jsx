@@ -22,11 +22,11 @@ export default function Estoque() {
   const [search, setSearch] = useState('')
   const [sortByStatus, setSortByStatus] = useState(() => localStorage.getItem('estoque_sort') === 'true')
 
-  const toggleSort = () => setSortByStatus(v => {
-    const next = !v
-    localStorage.setItem('estoque_sort', next)
-    return next
-  })
+  useEffect(() => {
+    localStorage.setItem('estoque_sort', sortByStatus)
+  }, [sortByStatus])
+
+  const toggleSort = () => setSortByStatus(v => !v)
 
   const load = () => {
     api.get('/itens/').then(r => { setItens(r.data); setLoading(false) })
