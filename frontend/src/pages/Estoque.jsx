@@ -20,7 +20,13 @@ export default function Estoque() {
   const [deleteItem, setDeleteItem] = useState(null)
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState('')
-  const [sortByStatus, setSortByStatus] = useState(false)
+  const [sortByStatus, setSortByStatus] = useState(() => localStorage.getItem('estoque_sort') === 'true')
+
+  const toggleSort = () => setSortByStatus(v => {
+    const next = !v
+    localStorage.setItem('estoque_sort', next)
+    return next
+  })
 
   const load = () => {
     api.get('/itens/').then(r => { setItens(r.data); setLoading(false) })
@@ -95,7 +101,7 @@ export default function Estoque() {
         </div>
         <button
           className={`filter-btn ${sortByStatus ? 'active' : ''}`}
-          onClick={() => setSortByStatus(v => !v)}
+          onClick={toggleSort}
         >
           {sortByStatus ? '● ' : '○ '}Críticos primeiro
         </button>
