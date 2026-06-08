@@ -9,9 +9,11 @@ async def verificar_estoque():
 
     for item in itens:
         if item["quantidade"] <= item["quantidade_minima"]:
+            qtd = int(item['quantidade']) if item['quantidade'] == int(item['quantidade']) else item['quantidade']
+            mini = int(item['quantidade_minima']) if item['quantidade_minima'] == int(item['quantidade_minima']) else item['quantidade_minima']
             alertas.append(
-                f"⚠️ <b>{item['nome']}</b>: {item['quantidade']} {item['unidade']} restantes "
-                f"(mínimo: {item['quantidade_minima']})"
+                f"⚠️ <b>{item['nome']}</b>: {qtd} {item['unidade']} restantes "
+                f"(mínimo: {mini})"
             )
 
         if item.get("validade"):
