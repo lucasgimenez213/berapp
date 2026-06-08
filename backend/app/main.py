@@ -10,7 +10,7 @@ from app.routes import itens, movimentacoes, cron, webhook, auth
 SECRET_KEY = os.getenv("SECRET_KEY", "changeme-insecure")
 ALGORITHM = "HS256"
 
-PUBLIC_PATHS = {"/", "/auth/login", "/webhook/telegram", "/docs", "/openapi.json", "/redoc"}
+PUBLIC_PATHS = {"/", "/auth/login", "/webhook/telegram", "/cron/check", "/docs", "/openapi.json", "/redoc"}
 
 
 @asynccontextmanager
