@@ -20,6 +20,13 @@ async def telegram_webhook(request: Request):
     if not texto:
         return {"ok": True}
 
+    # remove menção ao bot se presente (ex: "@berapp_bot saida de 10 seringas")
+    if texto.startswith("@"):
+        texto = " ".join(texto.split()[1:]).strip()
+
+    if not texto:
+        return {"ok": True}
+
     try:
         resultado = await processar_mensagem(texto)
         acao = resultado.get("acao")
