@@ -16,6 +16,8 @@ async def telegram_webhook(request: Request):
 
     message = data.get("message", {})
     texto = message.get("text", "")
+    sender = message.get("from", {})
+    nome_remetente = sender.get("first_name", "Telegram")
 
     if not texto:
         return {"ok": True}
@@ -52,7 +54,7 @@ async def telegram_webhook(request: Request):
                     "tipo": acao,
                     "quantidade": resultado["quantidade"],
                     "data": datetime.now(timezone.utc),
-                    "observacoes": f"via Telegram: {texto}"
+                    "observacoes": f"via Telegram ({nome_remetente}): {texto}"
                 })
 
         await enviar_mensagem(resultado.get("resposta", "✅ Feito!"))
